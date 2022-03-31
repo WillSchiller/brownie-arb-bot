@@ -21,4 +21,3 @@ def zeroX():
     zeroX  = w3.eth.contract(address=address, abi=abi)
 
     return zeroX
-

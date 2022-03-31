@@ -4,12 +4,12 @@ from web3 import Web3, EthereumTesterProvider
 from dotenv import load_dotenv
 import os
 from brownie import *
-import scripts.abi as abi
+from .abi import oneInchV4, zeroX
 
 load_dotenv()
 
-oneInchv4 = abi.oneInchV4()
-zeroX = abi.zeroX()
+oneInchv4 = oneInchV4()
+zerox = zeroX()
 
 w3 = Web3(Web3.HTTPProvider( os.getenv('RPC')))
 
@@ -32,14 +32,23 @@ def checkArb(r):
   zrxOrder, metadata, assetOrder = (r['order'], r['metaData'], ['X', 'X', 'X'])
   inputAssetAmount = zrxOrder['takerAssetAmount']
   amount = zrxOrder['makerAssetAmount']
-  res = requests.get(f'https://api.1inch.exchange/v4.0/1/quote?fromTokenAddress={quoteAssetAddress}&toTokenAddress={baseAssetAddress}&amount={amount}').json()
-  outputAssetAmount = res['toTokenAmount']
+  oneInchOrder = requests.get(f'https://api.1inch.exchange/v4.0/1/quote?fromTokenAddress={quoteAssetAddress}&toTokenAddress={baseAssetAddress}&amount={amount}').json()
+  outputAssetAmount = oneInchOrder['toTokenAmount']
   netProfit =   Web3.fromWei(int(outputAssetAmount), 'ether') - Web3.fromWei(int(inputAssetAmount), 'ether') 
   if netProfit > 0.1:
     print(netProfit)
     print(outputAssetAmount)
     print(inputAssetAmount)
-    return outputAssetAmount, inputAssetAmount, netProfit
+    trade(zrxOrder, oneInchOrder)
+
+def trade(zrxOrder, oneInchOrder):
+  acc = accounts.at(os.getenv("myAccount"), force=True)
+  swap_proxy = SwapProxy[len(SwapProxy) - 1]
+  print(swap_proxy)
+  print(zrxOrder)
+  print("================")
+  print(oneInchOrder)
+
 
 
 
