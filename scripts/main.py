@@ -4,54 +4,42 @@ from web3 import Web3, EthereumTesterProvider
 from dotenv import load_dotenv
 import os
 from brownie import *
+import scripts.abi as abi
 
 load_dotenv()
 
-w3 = Web3(Web3.HTTPProvider( os.getenv('RPC')))
-#w3.isConnected()
+oneInchv4 = abi.oneInchV4()
+zeroX = abi.zeroX()
 
-address = '0x1111111254fb6c44bAC0beD2854e76F90643097d'
-abi = [{"inputs":[{"internalType":"address","name":"weth","type":"address"},{"internalType":"contract IClipperExchangeInterface","name":"_clipperExchange","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":False,"inputs":[{"indexed":False,"internalType":"bytes32","name":"orderHash","type":"bytes32"},{"indexed":False,"internalType":"uint256","name":"makingAmount","type":"uint256"}],"name":"OrderFilledRFQ","type":"event"},{"anonymous":False,"inputs":[{"indexed":True,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":True,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"inputs":[],"name":"DOMAIN_SEPARATOR","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"LIMIT_ORDER_RFQ_TYPEHASH","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"orderInfo","type":"uint256"}],"name":"cancelOrderRFQ","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract IERC20","name":"srcToken","type":"address"},{"internalType":"contract IERC20","name":"dstToken","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"uint256","name":"minReturn","type":"uint256"}],"name":"clipperSwap","outputs":[{"internalType":"uint256","name":"returnAmount","type":"uint256"}],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"address payable","name":"recipient","type":"address"},{"internalType":"contract IERC20","name":"srcToken","type":"address"},{"internalType":"contract IERC20","name":"dstToken","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"uint256","name":"minReturn","type":"uint256"}],"name":"clipperSwapTo","outputs":[{"internalType":"uint256","name":"returnAmount","type":"uint256"}],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"address payable","name":"recipient","type":"address"},{"internalType":"contract IERC20","name":"srcToken","type":"address"},{"internalType":"contract IERC20","name":"dstToken","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"uint256","name":"minReturn","type":"uint256"},{"internalType":"bytes","name":"permit","type":"bytes"}],"name":"clipperSwapToWithPermit","outputs":[{"internalType":"uint256","name":"returnAmount","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"destroy","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"components":[{"internalType":"uint256","name":"info","type":"uint256"},{"internalType":"contract IERC20","name":"makerAsset","type":"address"},{"internalType":"contract IERC20","name":"takerAsset","type":"address"},{"internalType":"address","name":"maker","type":"address"},{"internalType":"address","name":"allowedSender","type":"address"},{"internalType":"uint256","name":"makingAmount","type":"uint256"},{"internalType":"uint256","name":"takingAmount","type":"uint256"}],"internalType":"struct LimitOrderProtocolRFQ.OrderRFQ","name":"order","type":"tuple"},{"internalType":"bytes","name":"signature","type":"bytes"},{"internalType":"uint256","name":"makingAmount","type":"uint256"},{"internalType":"uint256","name":"takingAmount","type":"uint256"}],"name":"fillOrderRFQ","outputs":[{"internalType":"uint256","name":"","type":"uint256"},{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"payable","type":"function"},{"inputs":[{"components":[{"internalType":"uint256","name":"info","type":"uint256"},{"internalType":"contract IERC20","name":"makerAsset","type":"address"},{"internalType":"contract IERC20","name":"takerAsset","type":"address"},{"internalType":"address","name":"maker","type":"address"},{"internalType":"address","name":"allowedSender","type":"address"},{"internalType":"uint256","name":"makingAmount","type":"uint256"},{"internalType":"uint256","name":"takingAmount","type":"uint256"}],"internalType":"struct LimitOrderProtocolRFQ.OrderRFQ","name":"order","type":"tuple"},{"internalType":"bytes","name":"signature","type":"bytes"},{"internalType":"uint256","name":"makingAmount","type":"uint256"},{"internalType":"uint256","name":"takingAmount","type":"uint256"},{"internalType":"address payable","name":"target","type":"address"}],"name":"fillOrderRFQTo","outputs":[{"internalType":"uint256","name":"","type":"uint256"},{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"payable","type":"function"},{"inputs":[{"components":[{"internalType":"uint256","name":"info","type":"uint256"},{"internalType":"contract IERC20","name":"makerAsset","type":"address"},{"internalType":"contract IERC20","name":"takerAsset","type":"address"},{"internalType":"address","name":"maker","type":"address"},{"internalType":"address","name":"allowedSender","type":"address"},{"internalType":"uint256","name":"makingAmount","type":"uint256"},{"internalType":"uint256","name":"takingAmount","type":"uint256"}],"internalType":"struct LimitOrderProtocolRFQ.OrderRFQ","name":"order","type":"tuple"},{"internalType":"bytes","name":"signature","type":"bytes"},{"internalType":"uint256","name":"makingAmount","type":"uint256"},{"internalType":"uint256","name":"takingAmount","type":"uint256"},{"internalType":"address payable","name":"target","type":"address"},{"internalType":"bytes","name":"permit","type":"bytes"}],"name":"fillOrderRFQToWithPermit","outputs":[{"internalType":"uint256","name":"","type":"uint256"},{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"maker","type":"address"},{"internalType":"uint256","name":"slot","type":"uint256"}],"name":"invalidatorForOrderRFQ","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract IERC20","name":"token","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"rescueFunds","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract IAggregationExecutor","name":"caller","type":"address"},{"components":[{"internalType":"contract IERC20","name":"srcToken","type":"address"},{"internalType":"contract IERC20","name":"dstToken","type":"address"},{"internalType":"address payable","name":"srcReceiver","type":"address"},{"internalType":"address payable","name":"dstReceiver","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"uint256","name":"minReturnAmount","type":"uint256"},{"internalType":"uint256","name":"flags","type":"uint256"},{"internalType":"bytes","name":"permit","type":"bytes"}],"internalType":"struct AggregationRouterV4.SwapDescription","name":"desc","type":"tuple"},{"internalType":"bytes","name":"data","type":"bytes"}],"name":"swap","outputs":[{"internalType":"uint256","name":"returnAmount","type":"uint256"},{"internalType":"uint256","name":"spentAmount","type":"uint256"},{"internalType":"uint256","name":"gasLeft","type":"uint256"}],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"uint256","name":"minReturn","type":"uint256"},{"internalType":"uint256[]","name":"pools","type":"uint256[]"}],"name":"uniswapV3Swap","outputs":[{"internalType":"uint256","name":"returnAmount","type":"uint256"}],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"int256","name":"amount0Delta","type":"int256"},{"internalType":"int256","name":"amount1Delta","type":"int256"},{"internalType":"bytes","name":"","type":"bytes"}],"name":"uniswapV3SwapCallback","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address payable","name":"recipient","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"uint256","name":"minReturn","type":"uint256"},{"internalType":"uint256[]","name":"pools","type":"uint256[]"}],"name":"uniswapV3SwapTo","outputs":[{"internalType":"uint256","name":"returnAmount","type":"uint256"}],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"address payable","name":"recipient","type":"address"},{"internalType":"contract IERC20","name":"srcToken","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"uint256","name":"minReturn","type":"uint256"},{"internalType":"uint256[]","name":"pools","type":"uint256[]"},{"internalType":"bytes","name":"permit","type":"bytes"}],"name":"uniswapV3SwapToWithPermit","outputs":[{"internalType":"uint256","name":"returnAmount","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract IERC20","name":"srcToken","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"uint256","name":"minReturn","type":"uint256"},{"internalType":"bytes32[]","name":"pools","type":"bytes32[]"}],"name":"unoswap","outputs":[{"internalType":"uint256","name":"returnAmount","type":"uint256"}],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"contract IERC20","name":"srcToken","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"uint256","name":"minReturn","type":"uint256"},{"internalType":"bytes32[]","name":"pools","type":"bytes32[]"},{"internalType":"bytes","name":"permit","type":"bytes"}],"name":"unoswapWithPermit","outputs":[{"internalType":"uint256","name":"returnAmount","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"stateMutability":"payable","type":"receive"}]
-contract_instance = w3.eth.contract(address=address, abi=abi)
+w3 = Web3(Web3.HTTPProvider( os.getenv('RPC')))
 
 baseAssetAddress = os.getenv('baseAssetAddress')
 quoteAssetAddress = os.getenv('quoteAssetAddress')
+
+def main():
+    try:
+        base = baseAssetAddress[2:]
+        quote = quoteAssetAddress[2:]
+        res = requests.get(f'https://api.0x.org/sra/v3/orderbook?baseAssetData=0xf47261b0000000000000000000000000{base}&quoteAssetData=0xf47261b0000000000000000000000000{quote}&perPage=1000')
+        _0x_txs = res.json()['bids']['records'] 
+        arb_results = map(checkArb, _0x_txs)
+        arb_results = list(arb_results)
+        #print(arb_results)
+    except Exception as e:
+        print(f"error:{e}")
 
 def checkArb(r):
   zrxOrder, metadata, assetOrder = (r['order'], r['metaData'], ['X', 'X', 'X'])
   inputAssetAmount = zrxOrder['takerAssetAmount']
   amount = zrxOrder['makerAssetAmount']
-  r2 = requests.get(f'https://api.1inch.exchange/v4.0/1/quote?fromTokenAddress={quoteAssetAddress}&toTokenAddress={baseAssetAddress}&amount={amount}').json()
-  #print(f'https://api.1inch.exchange/v4.0/1/quote?fromTokenAddress={baseAssetAddress}&toTokenAddress={quoteAssetAddress}&amount={amount}')
-  #print('https://api.1inch.exchange/v4.0/1/swap?fromTokenAddress=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&toTokenAddress=0x36f3fd68e7325a35eb768f1aedaae9ea0689d723&amount=1000000000000000000&fromAddress=0xBa4de9E2b32c99Adb0E53356Def524D46aFAd7e3&slippage=1&disableEstimate=true')
-  #print(r2)
-  outputAssetAmount = r2['toTokenAmount']
-  print(outputAssetAmount)
-  print(inputAssetAmount)
+  res = requests.get(f'https://api.1inch.exchange/v4.0/1/quote?fromTokenAddress={quoteAssetAddress}&toTokenAddress={baseAssetAddress}&amount={amount}').json()
+  outputAssetAmount = res['toTokenAmount']
   netProfit =   Web3.fromWei(int(outputAssetAmount), 'ether') - Web3.fromWei(int(inputAssetAmount), 'ether') 
-  print(netProfit)
-  return outputAssetAmount, inputAssetAmount, netProfit
-def main():
-    try:
-        base = baseAssetAddress[2:]
-        quote = quoteAssetAddress[2:]
-        r = requests.get(f'https://api.0x.org/sra/v3/orderbook?baseAssetData=0xf47261b0000000000000000000000000{base}&quoteAssetData=0xf47261b0000000000000000000000000{quote}&perPage=1000').json()
-        #print(f'https://api.0x.org/sra/v3/orderbook?baseAssetData=0xf47261b0000000000000000000000000{base}&quoteAssetData=0xf47261b0000000000000000000000000{quote}&perPage=1000')
-        r = r['bids']['records'] 
-        #print(r)
-        x = map(checkArb, r)
-        r = list(x)
-        print(r)
-
-    except Exception as e:
-        print(f"error:{e}")
+  if netProfit > 0.1:
+    print(netProfit)
+    print(outputAssetAmount)
+    print(inputAssetAmount)
+    return outputAssetAmount, inputAssetAmount, netProfit
 
 
 
-TRADER_ADDRESS = os.getenv('address')
-
-print("==================================R2")
-
-
-
-#print(r2.json())
