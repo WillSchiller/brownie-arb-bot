@@ -7,7 +7,7 @@ load_dotenv()
 def main():
     accounts.add(os.getenv("pk"))
     acc = accounts.at(os.getenv("myAccount"), force=True)
-    router = '0x1111111254fb6c44bAC0beD2854e76F90643097d'
+    router = '0x61935CbDd02287B511119DDb11Aeb42F1593b7Ef'
 
     swap_proxy = SwapProxy.deploy(
         router,

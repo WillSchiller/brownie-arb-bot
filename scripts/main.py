@@ -29,26 +29,28 @@ def main():
         print(f"error:{e}")
 
 def checkArb(r):
-  zrxOrder, metadata, assetOrder = (r['order'], r['metaData'], ['X', 'X', 'X'])
+  zrxOrder, metadata = (r['order'], r['metaData'])
   inputAssetAmount = zrxOrder['takerAssetAmount']
+  out2 = Web3.fromWei(int(zrxOrder['makerAssetAmount']), 'ether')
   amount = zrxOrder['makerAssetAmount']
   oneInchOrder = requests.get(f'https://api.1inch.exchange/v4.0/1/quote?fromTokenAddress={quoteAssetAddress}&toTokenAddress={baseAssetAddress}&amount={amount}').json()
   outputAssetAmount = oneInchOrder['toTokenAmount']
   netProfit =   Web3.fromWei(int(outputAssetAmount), 'ether') - Web3.fromWei(int(inputAssetAmount), 'ether') 
   if netProfit > 0.1:
     print(netProfit)
-    print(outputAssetAmount)
-    print(inputAssetAmount)
+    print(out2)
+    print(Web3.fromWei(int(outputAssetAmount), 'ether'))
+    print(Web3.fromWei(int(inputAssetAmount), 'ether'))
     trade(zrxOrder, oneInchOrder)
 
 def trade(zrxOrder, oneInchOrder):
   acc = accounts.at(os.getenv("myAccount"), force=True)
-  swap_proxy = SwapProxy[len(SwapProxy) - 1]
-  print(swap_proxy)
+  #swap_proxy = SwapProxy[len(SwapProxy) - 1]
+  #print(swap_proxy)
   print(zrxOrder)
   print("================")
   print(oneInchOrder)
 
-
-
-
+# ----------------------------------------------------- # 
+# DONT FORGET FLASHBOTS ;) HAHAH // NO FRONT RUN PLEASE
+# ----------------------------------------------------- #
